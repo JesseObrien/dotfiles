@@ -1,0 +1,19 @@
+[user]
+	name = Jesse O'Brien
+	email = jesse@jesse-obrien.ca
+
+[color]
+	ui = auto
+
+[alias]
+	c = commit
+	l = !git log --graph --abbrev-commit --date=relative
+	di = diff
+	st = status
+	co = checkout
+	amend = commit --amend
+	aa = add --all
+	b = branch
+	pom = push origin master
+	pod = push origin dev
+
