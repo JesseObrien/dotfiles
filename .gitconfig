@@ -7,7 +7,6 @@
 
 [alias]
 	c = commit
-	l = !git log --graph --abbrev-commit --date=relative
 	di = diff
 	st = status
 	co = checkout
@@ -16,4 +15,4 @@
 	b = branch
 	pom = push origin master
 	pod = push origin dev
-
+	l = "!. ~/.githelpers && pretty_git_log"
