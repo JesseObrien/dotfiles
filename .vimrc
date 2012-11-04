@@ -72,4 +72,5 @@ map <c-f> :CtrlPClearAllCaches <enter>
 au BufRead,BufNewFile *.blade.php set filetype=html
 
 command! W :w
-
+let mapleader=","
+nnoremap <Leader>t :! php artisan test <CR>
