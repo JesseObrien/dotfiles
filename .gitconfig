@@ -16,3 +16,4 @@
 	pom = push origin master
 	pod = push origin dev
 	l = "!. ~/.githelpers && pretty_git_log"
+	u = git submodule update --init
