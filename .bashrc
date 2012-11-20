@@ -128,7 +128,7 @@ function proml {
 
   local     DEFAULT="\[\033[0m\]"
 
-PS1="\h:\W \u$BLUE\$(parse_git_branch) $DEFAULT\$ "
+PS1="\h:\W \u$WHITE\$(parse_git_branch) $DEFAULT\$ "
 
 }
 
