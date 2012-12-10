@@ -98,6 +98,10 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
+# Custom Aliases
+alias composer-install='curl -s https://getcomposer.org/installer | php'
+alias composer='php composer.phar'
+alias artisan='php artisan'
 alias linode='ssh jesse-obrien.ca'
 
 function parse_git_branch {
