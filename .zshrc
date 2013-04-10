@@ -53,6 +53,14 @@ alias gb="go build"
 
 # A quick fuzzy search function
 function fuzzy_find {
-	find . -name "*$1*"
+	for file in `find . -name "*$1*"`; do
+		echo -n "vim $file?"
+		read yn 
+		case $yn in
+			[Yy]* ) vim $file; break;;
+			[Nn]* ) ;;
+			* ) ;;
+		esac
+	done
 }
 alias f=fuzzy_find
