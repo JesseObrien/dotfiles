@@ -48,8 +48,16 @@ alias composer="php composer.phar"
 alias composer-install="curl -sS https://getcomposer.org/installer | php"
 alias artisan="php artisan"
 
+function laravel_paste {
+	curl -sL -w "$1 Uploaded to paste.laravel.com\\n\\tStatus: %{http_code}\\n\\tURL: %{url_effective}\\n" --data-urlencode paste@$1 "http://paste.laravel.com" -o /dev/null
+}
+alias paste=laravel_paste
+
 # Go aliases
 alias gb="go build"
+
+# GOPATH exports
+export GOPATH=~/go
 
 # A quick fuzzy search function
 function fuzzy_find {
