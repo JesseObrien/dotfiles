@@ -45,7 +45,7 @@ export EDITOR=vim
 
 # PHP aliases
 alias composer="php composer.phar"
-alias composer-install="curl -sS https://getcomposer.org/installer | php"
+alias composer-install="curl -sS https://getcomposer.org/installer | php && composer install"
 alias artisan="php artisan"
 
 # Quick command to paste a file to paste.laravel.com
