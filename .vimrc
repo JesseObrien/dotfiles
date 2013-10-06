@@ -71,6 +71,9 @@ map <c-f> :CtrlPClearAllCaches <enter>
 " Laravel Blade Syntax
 au BufRead,BufNewFile *.blade.php set filetype=html
 
+" Let syntastic passively assess html files
+let g:syntastic_mode_map={ 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html'] }
+
 command! W :w
 let mapleader=","
 nnoremap <Leader>t :! php artisan test <CR>
