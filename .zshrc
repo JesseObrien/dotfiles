@@ -59,7 +59,8 @@ alias paste=laravel_paste
 alias gb="go build"
 
 # GOPATH exports
-export GOPATH=~/go
+export GOROOT=$HOME/go
+export PATH=$PATH:$GOROOT/bin
 
 # A quick fuzzy search function
 function fuzzy_find {
