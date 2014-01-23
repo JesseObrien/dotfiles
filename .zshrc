@@ -43,6 +43,9 @@ export EDITOR=vim
 
 ## Aliases
 
+alias svim="sudo vim"
+alias upgrade="sudo packer -Syu"
+
 # PHP aliases
 alias composer="php composer.phar"
 alias composer-install="curl -sS https://getcomposer.org/installer | php && composer install"
