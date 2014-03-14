@@ -41,7 +41,7 @@ alias paste=laravel_paste
 alias gb="go build"
 
 # GOPATH exports
-export GOROOT=$HOME/go
+export GOBASE=$HOME/go
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
@@ -58,12 +58,16 @@ function go-setup {
 
 # Create a whole workspace
 function go-create {
-	mkdir -p $GOROOT
-	mkdir -p $GOROOT/$1
-	go-setup $GOROOT/$1
-	go-switch $GOROOT/$1
-	echo "Created a go workspace in $GOROOT/$1"
-	tree $GOROOT/$1
+	mkdir -p $GOBASE
+	mkdir -p $GOBASE/$1
+	go-setup $GOBASE/$1
+	go-switch $GOBASE/$1
+	echo "Created a go workspace in $GOBASE/$1"
+	tree $GOBASE/$1
+}
+
+function go-clone {
+	git clone $1 $GOBASE/
 }
 
 # A quick fuzzy search function
