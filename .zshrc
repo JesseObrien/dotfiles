@@ -23,12 +23,14 @@ export EDITOR=vim
 ## Aliases
 
 alias svim="sudo vim"
-alias upgrade="sudo packer -Syu"
+alias upgrade="sudo packer -Syu --noconfirm --noedit"
+alias packer="packer --noconfirm --noedit"
 
 # PHP aliases
 alias composer="hhvm /usr/local/bin/composer.phar"
 alias composer-install="curl -sS https://getcomposer.org/installer | php && composer install"
 alias artisan="php artisan"
+
 
 # Quick command to paste a file to paste.laravel.com
 # Use: paste file.php
