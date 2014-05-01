@@ -9,9 +9,31 @@ call pathogen#infect()
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+
 " Let the :Error window pop up automatically
 let g:syntastic_auto_loc_list=1
 let g:syntastic_auto_jump=1
+
+" Turn the ruler on
+set ruler
+
+" Timeout for leader commands
+set timeoutlen=500
+
+set linespace=3
+
+set incsearch
+set hlsearch
+
+set wrap
+set textwidth=79
+set formatoptions=qrn1
+
+
+" Command completion
+set wildmenu
+set wildmode=list:longest
+
 
 " Enable powerline symbols
 let g:Powerline_symbols = 'fancy'
@@ -33,8 +55,8 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set backspace=indent,eol,start
 
 " Tab settings and autoindent
-set tabstop=3
-set shiftwidth=3
+set tabstop=4
+set shiftwidth=4
 "set softtabstop=4
 set noexpandtab
 set autoindent
@@ -45,10 +67,18 @@ set incsearch
 
 " Solarized colorscheme
 set background=dark
+colorscheme solarized
 
 
 " Line numbers
 set number
+
+" Switch between relative and no relative number in command/insert
+au FocusLost * :set norelativenumber
+au FocusGained * :set relativenumber
+autocmd InsertEnter * :set norelativenumber
+autocmd InsertLeave * :set relativenumber
+
 
 " Don't show scroll bars in the GUI
 set guioptions-=L
@@ -73,7 +103,8 @@ au BufRead,BufNewFile *.blade.php set filetype=html
 
 " Let syntastic passively assess html files
 let g:syntastic_mode_map={ 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html'] }
+let g:ctrlp_custom_ignore = { 'dir': 'vendor' }
 
 command! W :w
 let mapleader=","
-nnoremap <Leader>t :! php artisan test <CR>
+nnoremap <Leader>t :! ./vendor/bin/phpunit <CR>
