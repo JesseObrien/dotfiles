@@ -48,6 +48,10 @@ filetype plugin indent on
 set ignorecase
 set smartcase
 
+" Highlight lines over 80 characters
+highlight OverLength ctermbg=lightgrey ctermfg=black guibg=#FFD9D9
+match OverLength /\%81v.\+/
+
 " Move all backups to one directory
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
