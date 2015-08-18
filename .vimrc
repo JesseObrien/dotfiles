@@ -65,7 +65,6 @@ set timeoutlen=500
 set linespace=3
 set incsearch
 set hlsearch
-set number
 
 set nowrap
 set textwidth=79
@@ -105,6 +104,7 @@ function! RenameFile()
     endif
 endfunction
 map <leader>rn :call RenameFile()<cr>
+nnoremap <leader>c :!ctags -R -f ./.git/tags .
 
 " Highlight lines over 80 characters
 highlight OverLength ctermbg=lightgrey ctermfg=black guibg=#FFD9D9
@@ -138,8 +138,8 @@ colorscheme base16-tomorrow
 au FocusLost * :set norelativenumber
 au FocusGained * :set relativenumber
 autocmd InsertEnter * :set norelativenumber
-autocmd InsertLeave * :set relativenumber
-
+set relativenumber
+set number
 
 " Don't show scroll bars in the GUI
 set guioptions-=L
@@ -162,13 +162,17 @@ map <c-f> :CtrlPClearAllCaches <enter>
 " Laravel Blade Syntax
 au BufRead,BufNewFile *.blade.php set filetype=html
 au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
+
+" Ctrlp config
 let g:ctrlp_custom_ignore = '\.git$\|\.o$\|\.app$\|\.beam$\|\.dSYM\|\.ipa$\|\.csv\|tags\|public\/images$\|public\/uploads$\|log\|tmp$\|source_maps\|app\/assets\/images\|test\/reports\|node_modules\|bower_components\|vendor'
+
+" Allow ctrlp to use git to list files, makes it faster.
+let g:ctrlp_user_command = ['.git/', 'cd %s && git ls-files --exclude-standard -co']
 
 let g:syntastic_mode_map={ 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html'] }
 
 command! W :w
 nnoremap <Leader>t :! phpunit <CR>
-nnoremap <Leader>p :! phpspec run <CR>
 
 " Include user's local vim config
 if filereadable(expand("~/.vimrc.local"))
@@ -180,4 +184,24 @@ if filereadable(expand("./.vimrc.local"))
     source ./.vimrc.local
 endif
 
+autocmd FileType yml setlocal shiftwidth=2 tabstop=2 expandtab
 
+command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
+function! s:RunShellCommand(cmdline)
+  echo a:cmdline
+  let expanded_cmdline = a:cmdline
+  for part in split(a:cmdline, ' ')
+     if part[0] =~ '\v[%#<]'
+        let expanded_part = fnameescape(expand(part))
+        let expanded_cmdline = substitute(expanded_cmdline, part, expanded_part, '')
+     endif
+  endfor
+  botright new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  call setline(1, 'You entered:    ' . a:cmdline)
+  call setline(2, 'Expanded Form:  ' .expanded_cmdline)
+  call setline(3,substitute(getline(2),'.','=','g'))
+  execute '$read !'. expanded_cmdline
+  setlocal nomodifiable
+  1
+endfunction
