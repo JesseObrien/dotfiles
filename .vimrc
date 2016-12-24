@@ -2,6 +2,8 @@ set nocompatible " be iMproved, required
 filetype off " required
 let mapleader = ","
 
+au BufEnter /private/tmp/crontab.* setl backupcopy=yes
+
 function! LoadVundle()
     let vundle_installed=filereadable(expand('~/.vim/bundle/vundle/README.md'))
 
@@ -17,23 +19,30 @@ function! LoadVundle()
     set rtp+=~/.vim/bundle/vundle/
     call vundle#rc()
 
+    " Per project vimrc files
+    Plugin 'LucHermitte/lh-vim-lib'
+    Plugin 'LucHermitte/local_vimrc'
+
+    Plugin 'vimwiki/vimwiki'
+
+    Plugin 'tomtom/tcomment_vim'
+    Plugin 'tpope/vim-vinegar'
     Plugin 'jacoborus/tender'
     Plugin 'valloric/youcompleteme'
     Plugin 'gmarik/Vundle.vim'
     Plugin 'bling/vim-airline'
-    Plugin 'tpope/vim-fugitive'
+    Plugin 'vim-airline/vim-airline-themes'
     Plugin 'scrooloose/syntastic'
     Plugin 'chriskempson/base16-vim'
     Plugin 'elzr/vim-json'
     Plugin 'tpope/vim-surround'
-    Plugin 'xsbeats/vim-blade'
     Plugin 'kien/ctrlp.vim'
     Plugin 'ervandew/supertab'
-    Plugin 'fatih/vim-go'
     Plugin 'mattn/emmet-vim'
-    Plugin 'stephpy/vim-php-cs-fixer'
-    Plugin 'shawncplus/phpcomplete.vim'
     Plugin 'junegunn/vim-easy-align'
+
+    Plugin 'fatih/vim-go'
+    Plugin 'shawncplus/phpcomplete.vim'
     Plugin 'chrisbra/csv.vim'
 
     Plugin 'pangloss/vim-javascript'
@@ -164,7 +173,8 @@ au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set f
 let g:ctrlp_custom_ignore = '\.git$\|\.o$\|\.app$\|\.beam$\|\.dSYM\|\.ipa$\|\.csv\|tags\|public\/images$\|public\/uploads$\|log\|tmp$\|source_maps\|app\/assets\/images\|test\/reports\|node_modules\|bower_components\|vendor'
 
 " Allow ctrlp to use git to list files, makes it faster.
-let g:ctrlp_user_command = ['.git/', 'cd %s && git ls-files --exclude-standard -co']
+"let g:ctrlp_user_command = ['.git/', 'cd %s && git ls-files --exclude-standard -co']
+let g:ctrlp_user_command = 'rg %s --files -g ""'
 
 let g:syntastic_mode_map={ 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html', 'css', 'scss'] }
 
@@ -208,7 +218,7 @@ endfunction
 " Golang things
 au FileType go nmap <Leader>gd <Plug>(go-doc)
 autocmd BufWritePost *.go :GoLint
-let g:SuperTabDefaultCompletionType = "context"
+"let g:SuperTabDefaultCompletionType = "context"
 let g:javascript_enable_domhtmlcss = 1
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
@@ -227,7 +237,6 @@ autocmd FileType go nmap <leader>gb  <Plug>(go-build)
 autocmd FileType go nmap <leader>gr  <Plug>(go-run)
 autocmd FileType go nmap <leader>gt  <Plug>(go-test)
 
-
 set autowrite
 
 let g:javascript_conceal_function = "ƒ"
@@ -238,4 +247,5 @@ set tags=./tags;/
 
 " Airline
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme = 'tender'
+let g:airline_theme = 'base16_tomorrow'
+let g:netrw_liststyle=3
