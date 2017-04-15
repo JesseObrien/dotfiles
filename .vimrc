@@ -1,117 +1,179 @@
-set nocompatible " be iMproved, required
-filetype off " required
-let mapleader = ","
+" Loads of this was inspired by https://github.com/mcandre/dotfiles/blob/master/.vimrc
 
-au BufEnter /private/tmp/crontab.* setl backupcopy=yes
+" Specify a directory for plugins (for Neovim: ~/.local/share/nvim/plugged)
+call plug#begin('~/.local/share/nvim/plugged')
 
-function! LoadVundle()
-    let vundle_installed=filereadable(expand('~/.vim/bundle/vundle/README.md'))
+  " Any valid git URL is allowed
+  "Plug 'https://github.com/junegunn/vim-github-dashboard.git'
+  Plug 'junegunn/vim-easy-align'
+  Plug 'honza/vim-snippets'
 
-    if vundle_installed == 0
-        echo "Creating backups directory..."
-        silent !mkdir -p ~/.vim/backups
-        echo "Installing Vundle.."
-        echo ""
-        silent !mkdir -p ~/.vim/bundle
-        silent !git clone https://github.com/gmarik/vundle ~/.vim/bundle/vundle
-    endif
+  " Color schemes
+  Plug 'flazz/vim-colorschemes'
 
-    set rtp+=~/.vim/bundle/vundle/
-    call vundle#rc()
+  " Support editorconfig files
+  Plug 'editorconfig/editorconfig-vim'
 
-    " Per project vimrc files
-    Plugin 'LucHermitte/lh-vim-lib'
-    Plugin 'LucHermitte/local_vimrc'
+  " Scratch
+  Plug 'mtth/scratch.vim'
 
-    Plugin 'vimwiki/vimwiki'
+  " Airline
+  Plug 'bling/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
 
-    Plugin 'tomtom/tcomment_vim'
-    Plugin 'tpope/vim-vinegar'
-    Plugin 'jacoborus/tender'
-    Plugin 'valloric/youcompleteme'
-    Plugin 'gmarik/Vundle.vim'
-    Plugin 'bling/vim-airline'
-    Plugin 'vim-airline/vim-airline-themes'
-    Plugin 'scrooloose/syntastic'
-    Plugin 'chriskempson/base16-vim'
-    Plugin 'elzr/vim-json'
-    Plugin 'tpope/vim-surround'
-    Plugin 'kien/ctrlp.vim'
-    Plugin 'ervandew/supertab'
-    Plugin 'mattn/emmet-vim'
-    Plugin 'junegunn/vim-easy-align'
+  Plug 'tpope/vim-surround'
 
-    Plugin 'fatih/vim-go'
-    Plugin 'shawncplus/phpcomplete.vim'
-    Plugin 'chrisbra/csv.vim'
+  " Javascript related plugins
+  Plug 'pangloss/vim-javascript'
+  Plug 'maxmellon/vim-jsx-pretty'
+  Plug 'leafgarland/typescript-vim'
 
-    Plugin 'pangloss/vim-javascript'
-    Plugin 'mxw/vim-jsx'
+  Plug 'mattn/emmet-vim'
 
-    Plugin 'MarcWeber/vim-addon-mw-utils'
-    Plugin 'tomtom/tlib_vim'
-    Plugin 'garbas/vim-snipmate'
-    Plugin 'honza/vim-snippets'
+  " Go related plugins
+  Plug 'fatih/vim-go'
+  Plug 'nsf/gocode'
 
-    if vundle_installed==0
-        echo vundle_installed
-        echo "Vundle Installed, now Installing Bundles..."
-        echo ""
-        :BundleInstall
-        silent !make -C ~/.vim/bundle/vimproc.vim
-    endif
+  " Plugin outside ~/.vim/plugged with post-update hook
+  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plug 'junegunn/fzf.vim'
+  " {{{
+    let g:fzf_nvim_statusline = 0 " disable statusline overwriting
 
-    filetype plugin indent on
-endfunction
+    nnoremap <silent> <c-p> :Files<CR>
+    nnoremap <silent> <leader><space> :Files<CR>
+    nnoremap <silent> <leader>a :Buffers<CR>
+    nnoremap <silent> <leader>A :Windows<CR>
+    nnoremap <silent> <leader>; :BLines<CR>
+    nnoremap <silent> <leader>o :BTags<CR>
+    nnoremap <silent> <leader>O :Tags<CR>
+    nnoremap <silent> <leader>? :History<CR>
+    nnoremap <silent> <leader>/ :execute 'Ag ' . input('Ag/')<CR>
+    nnoremap <silent> <leader>. :AgIn
 
-call LoadVundle()
+    nnoremap <silent> K :call SearchWordWithAg()<CR>
+    vnoremap <silent> K :call SearchVisualSelectionWithAg()<CR>
+    nnoremap <silent> <leader>gl :Commits<CR>
+    nnoremap <silent> <leader>ga :BCommits<CR>
+    nnoremap <silent> <leader>ft :Filetypes<CR>
 
-set shell=zsh\ -l
+    imap <C-x><C-f> <plug>(fzf-complete-file-ag)
+    imap <C-x><C-l> <plug>(fzf-complete-line)
 
-" Syntastic settings
-" Enable the status line
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+    function! SearchWordWithAg()
+      execute 'Ag' expand('<cword>')
+    endfunction
 
-" Let the :Error window pop up automatically
-let g:syntastic_auto_loc_list=1
-let g:syntastic_auto_jump=1
+    function! SearchVisualSelectionWithAg() range
+      let old_reg = getreg('"')
+      let old_regtype = getregtype('"')
+      let old_clipboard = &clipboard
+      set clipboard&
+      normal! ""gvy
+      let selection = getreg('"')
+      call setreg('"', old_reg, old_regtype)
+      let &clipboard = old_clipboard
+      execute 'Ag' selection
+    endfunction
 
-" Turn the ruler on
-set ruler
+    function! SearchWithAgInDirectory(...)
+      call fzf#vim#ag(join(a:000[1:], ' '), extend({'dir': a:1}, g:fzf#vim#default_layout))
+    endfunction
+    command! -nargs=+ -complete=dir AgIn call SearchWithAgInDirectory(<f-args>)
+  " }}}
 
-" Timeout for leader commands
-set timeoutlen=500
+  " Unmanaged plugin (manually installed and updated)
+  Plug '~/my-prototype-plugin'
 
-set linespace=3
-set nowrap
-set textwidth=79
-set formatoptions=qrn1
-" Highlight lines over 80 characters
-highlight OverLength ctermbg=lightgrey ctermfg=black guibg=#FFD9D9
-match OverLength /\%81v.\+/
+" Initialize plugin system
+call plug#end()
 
-" Command completion
-set wildmenu
-set wildmode=longest:full,full
 
-" Enable powerline symbols
-let g:Powerline_symbols = 'fancy'
-set encoding=utf-8
 
-" Turn on syntax highlighting, auto indent
+""""""""""""""""""" CUSTOM CONFIG """""""""""""""""""
+
+let g:mapleader = ","
+inoremap jj <esc>
+
+" Fix Delete (backspace) on Mac OS X
+set backspace=2
+
+" Enable syntax highlighting
 syntax on
+
+" Indentation
+set autoindent
 filetype plugin indent on
 
-" Make searches case-sensitive only if they contain upper-case characters
-set hlsearch
-set ignorecase
-set smartcase
-set incsearch
-set showcmd
-set scrolloff=3
+set clipboard=unnamed
 
+if has("mouse")
+   set mouse=a
+endif
+
+" Bash-style tab completion
+set wildmode=longest,list
+set wildmenu
+
+
+" Fix trailing selection on visual copy/cut
+set selection=exclusive
+
+" Keep selection on visual yank
+vnoremap <silent> y ygv
+
+nnoremap <silent> p "+p
+
+
+" Disable comment continuation on paste
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
+" Show line numbers
+set number
+set relativenumber
+
+" Show statusline
+set laststatus=2
+
+" Case-insensitive search
+set ignorecase
+
+" Highlight search results
+set hlsearch
+
+" Default to soft tabs, 2 spaces
+set expandtab
+set sw=2
+set sts=2
+
+" Except Markdown
+autocmd FileType mkd set sw=4
+autocmd FileType mkd set sts=4
+
+" Color config
+set termguicolors
+set background=dark
+colorscheme Benokai
+
+" Default to Unix LF line endings
+set ffs=unix
+
+" Folding
+set foldmethod=syntax
+set foldcolumn=1
+set foldlevelstart=20
+
+let g:vim_markdown_folding_disabled=1 " Markdown
+let javaScript_fold=1                 " JavaScript
+let perl_fold=1                       " Perl
+let php_folding=1                     " PHP
+let r_syntax_folding=1                " R
+let ruby_fold=1                       " Ruby
+let sh_fold_enabled=1                 " sh
+let vimsyn_folding='af'               " Vim script
+let xml_syntax_folding=1              " XML
+
+" Rename files
 function! RenameFile()
     let old_name = expand('%')
     let new_name = input('New file name: ', expand('%'), 'file')
@@ -123,129 +185,41 @@ function! RenameFile()
 endfunction
 map <leader>rn :call RenameFile()<cr>
 
-nnoremap <leader>c :!ctags -R -f ./.git/tags .
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme = 'base16_spacemacs'
+let g:netrw_liststyle=3
 
+" Create a new tab using ,tn
 map <leader>tn :tabnew<cr>
 
-" Move all backups to one directory
-set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set backspace=indent,eol,start
-
-" Tab settings and autoindent
-set tabstop=4
-set shiftwidth=4
-"set softtabstop=4
-set expandtab
-set autoindent
-set smartindent
-
-set laststatus=2
-set showmatch
-
-" Solarized colorscheme
-set termguicolors
-let base16colorspace=256
-set background=dark
-colorscheme base16-tomorrow-night
-if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
-
-" Switch between relative and no relative number in command/insert
-set relativenumber
-set number
-
-" Don't show scroll bars in the GUI
-set guioptions-=L
-set guioptions-=r
-
-" Maps jj to <esc>
-inoremap jj <esc>
-map <c-f> :CtrlPClearAllCaches <enter>
+map <leader>s :Scratch<cr>
 
 " Laravel Blade Syntax
 au BufRead,BufNewFile *.blade.php set filetype=html
+
+" Ruby syntax for configs
 au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
-
-" Ctrlp config
-let g:ctrlp_custom_ignore = '\.git$\|\.o$\|\.app$\|\.beam$\|\.dSYM\|\.ipa$\|\.csv\|tags\|public\/images$\|public\/uploads$\|log\|tmp$\|source_maps\|app\/assets\/images\|test\/reports\|node_modules\|bower_components\|vendor'
-
-" Allow ctrlp to use git to list files, makes it faster.
-"let g:ctrlp_user_command = ['.git/', 'cd %s && git ls-files --exclude-standard -co']
-let g:ctrlp_user_command = 'rg %s --files -g ""'
-
-let g:syntastic_mode_map={ 'mode': 'active', 'active_filetypes': [], 'passive_filetypes': ['html', 'css', 'scss'] }
-
-command! W :w
-nnoremap <Leader>t :! phpunit <CR>
-nnoremap <silent><leader>p :call PhpCsFixerFixFile()<CR>
-nnoremap <Leader>b :! vendor/bin/behat --append-snippets <CR>
-
-" Include user's local vim config
-if filereadable(expand("~/.vimrc.local"))
-    source ~/.vimrc.local
-endif
-
-" Include project's local vim config
-if filereadable(expand("./.vimrc.local"))
-    source ./.vimrc.local
-endif
-
-autocmd FileType yml setlocal shiftwidth=2 tabstop=2 expandtab
-
-command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
-function! s:RunShellCommand(cmdline)
-  echo a:cmdline
-  let expanded_cmdline = a:cmdline
-  for part in split(a:cmdline, ' ')
-     if part[0] =~ '\v[%#<]'
-        let expanded_part = fnameescape(expand(part))
-        let expanded_cmdline = substitute(expanded_cmdline, part, expanded_part, '')
-     endif
-  endfor
-  botright new
-  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
-  call setline(1, 'You entered:    ' . a:cmdline)
-  call setline(2, 'Expanded Form:  ' .expanded_cmdline)
-  call setline(3,substitute(getline(2),'.','=','g'))
-  execute '$read !'. expanded_cmdline
-  setlocal nomodifiable
-  1
-endfunction
-
-" Golang things
-au FileType go nmap <Leader>gd <Plug>(go-doc)
-autocmd BufWritePost *.go :GoLint
-"let g:SuperTabDefaultCompletionType = "context"
-let g:javascript_enable_domhtmlcss = 1
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 "
-" " Start interactive EasyAlign for a motion/text object (e.g. gaip)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
-vmap <Leader>su ! awk '{ print length(), $0 \| "sort -n \| cut -d\\  -f2-" }'<cr>
+
+" YML
+autocmd FileType yml setlocal shiftwidth=2 tabstop=2 expandtab
+
+" vim-go: Enable goimports on save
+let g:go_fmt_command = "goimports"
 
 " JSX Highlighting in .js files
 let g:jsx_ext_required = 0
 
-nnoremap <Leader>nt :! npm test <CR>
-
-autocmd FileType go nmap <leader>gb  <Plug>(go-build)
-autocmd FileType go nmap <leader>gr  <Plug>(go-run)
-autocmd FileType go nmap <leader>gt  <Plug>(go-test)
-
-set autowrite
-
-let g:javascript_conceal_function = "ƒ"
+" vim-javascript
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 1
-let g:ycm_path_to_python_interpreter = "/usr/local/bin/python"
-set tags=./tags;/
+let g:javascript_plugin_flow = 1
 
-" Airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme = 'base16_tomorrow'
-let g:netrw_liststyle=3
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+
+let g:scratch_filetype = 'markdown'
