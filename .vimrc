@@ -8,6 +8,12 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'junegunn/vim-easy-align'
   Plug 'honza/vim-snippets'
 
+  " Allow commenting
+  Plug 'tomtom/tcomment_vim'
+
+  " vimproc
+  Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+
   " Color schemes
   Plug 'flazz/vim-colorschemes'
 
@@ -22,11 +28,20 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'vim-airline/vim-airline-themes'
 
   Plug 'tpope/vim-surround'
+  Plug 'vim-syntastic/syntastic'
+
+  " Autocomplete
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  "Plug 'zchee/deoplete-go', { 'do': 'make'}
 
   " Javascript related plugins
   Plug 'pangloss/vim-javascript'
   Plug 'maxmellon/vim-jsx-pretty'
   Plug 'leafgarland/typescript-vim'
+  "Plug 'carlitux/deoplete-ternjs', { 'do': 'yarn add global tern' }
+  Plug 'Quramy/tsuquyomi'
+  "Plug 'Shougo/unite.vim'
+  "Plug 'mhartington/vim-typings'
 
   Plug 'mattn/emmet-vim'
 
@@ -120,13 +135,13 @@ set wildmenu
 set selection=exclusive
 
 " Keep selection on visual yank
-vnoremap <silent> y ygv
+" vnoremap <silent> y ygv
 
 nnoremap <silent> p "+p
 
 
 " Disable comment continuation on paste
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+" autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Show line numbers
 set number
@@ -143,17 +158,20 @@ set hlsearch
 
 " Default to soft tabs, 2 spaces
 set expandtab
-set sw=2
-set sts=2
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
 
-" Except Markdown
-autocmd FileType mkd set sw=4
-autocmd FileType mkd set sts=4
+" Tabbing exceptions
+autocmd FileType mkd setlocal sw=4 sts=0 ts=4 expandtab
+autocmd FileType php setlocal sw=4 sts=0 ts=4 expandtab
+autocmd FileType javascript setlocal sw=4 sts=0 ts=4 expandtab
+autocmd FileType typescript setlocal sw=4 sts=0 ts=4 expandtab
 
 " Color config
 set termguicolors
 set background=dark
-colorscheme Benokai
+colorscheme Monokai
 
 " Default to Unix LF line endings
 set ffs=unix
@@ -183,7 +201,11 @@ function! RenameFile()
         redraw!
     endif
 endfunction
+
+" Rename files
 map <leader>rn :call RenameFile()<cr>
+" Retab files
+map <leader>rt gg=G
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme = 'base16_spacemacs'
@@ -198,16 +220,13 @@ map <leader>s :Scratch<cr>
 au BufRead,BufNewFile *.blade.php set filetype=html
 
 " Ruby syntax for configs
-au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
+au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru} set ft=ruby
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
-"
+
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
-
-" YML
-autocmd FileType yml setlocal shiftwidth=2 tabstop=2 expandtab
 
 " vim-go: Enable goimports on save
 let g:go_fmt_command = "goimports"
@@ -220,6 +239,41 @@ let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 1
 let g:javascript_plugin_flow = 1
 
+" Configure fzf to use gitignore files
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 
+" Configure scratch to use markdown
 let g:scratch_filetype = 'markdown'
+
+" Configure syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_typescript_checkers = ['tsc', 'tslint']
+let g:syntastic_quiet_messages = { "type": "style" }
+let g:syntastic_go_checkers = ['go']
+"let g:tsuquyomi_disable_quickfix = 1
+"let g:syntastic_typescript_checkers = ['tsuquyomi']
+
+" Enable omnicomplete
+set omnifunc=syntaxcomplete#Complete
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+
+" Configure Deoplete
+" Start Deoplete at vim startup
+let g:deoplete#enable_at_startup = 1
+" let g:tern_request_timeout = 1
+" let g:tern_show_signature_in_pum = '0'  " This do disable full signature type on autocomplete
+"
+" "Add extra filetypes
+" let g:tern#filetypes = [
+"                 \ 'jsx',
+"                 \ 'ts',
+"                 \ 'javascript.jsx',
+"                 \ 'vue',
+"                 \ ]
