@@ -7,7 +7,7 @@ ZSH=$HOME/.oh-my-zsh
 # time that oh-my-zsh is loaded.
 ZSH_THEME="ys"
 
-plugins=(git osx brew npm composer make)
+plugins=(git osx brew npm composer make yarn)
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
@@ -28,11 +28,11 @@ setopt hist_verify
 setopt append_history
 
 export HOMEBREW_AUTO_UPDATE=1
-export PATH="$(brew --prefix homebrew/php/php70)/bin:$PATH"
+export PATH="$(brew --prefix homebrew/php/php71)/bin:$PATH"
 export PATH=$PATH:~/go/bin
 export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/usr/local/sbin:/sbin
 export PATH=$PATH:~/bin
-export PATH=$PATH:/usr/local/Cellar/node/7.0.0/bin
+export PATH=$PATH:/usr/local/Cellar/node/7.4.0/bin
 export PATH=$PATH:~/.gem/ruby/2.0.0/bin
 export PATH=$PATH:~/.composer/vendor/bin
 export ANDROID_HOME=~/Library/Android/sdk
@@ -53,11 +53,12 @@ alias f=fuzzy_find
 alias battery=~/bin/battery.sh
 alias brew up="brew update && brew upgrade"
 alias tmux="tmux -2"
-alias vim=/usr/local/Cellar/macvim/8.0-110/MacVim.app/Contents/MacOS/Vim
+#alias vim=/usr/local/Cellar/macvim/8.0-110/MacVim.app/Contents/MacOS/Vim
 alias vim=nvim
 alias vi="nvim"
 alias svim="sudo nvim"
 alias gprune="git branch --merged | grep -v "\*" | grep -v master | grep -v dev | xargs -n 1 git branch -d"
+alias weather='curl -s wttr.in/Kitchener | sed -n "1,7p"'
 
 # PHP aliases
 alias art="php artisan"
@@ -69,3 +70,5 @@ alias gb="go build"
 #
 # fpath=(/usr/local/share/zsh-completions $fpath)
 . `brew --prefix`/etc/profile.d/z.sh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
