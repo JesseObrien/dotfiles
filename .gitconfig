@@ -1,19 +1,41 @@
 [user]
-	name = Jesse O'Brien
-	email = jesse@jesse-obrien.ca
+    name = Jesse O'Brien
+    email = jesse@jesse-obrien.ca
+#  email = jesse@jesse-obrien.ca
+#	useConfigOnly = true
 
 [color]
-	ui = auto
+    ui = auto
 
 [alias]
-	c = commit
-	di = diff
-	st = status
-	co = checkout
-	amend = commit --amend
-	aa = add --all
-	b = branch
-	pom = push origin master
-	pod = push origin dev
-	l = "!. ~/.githelpers && pretty_git_log"
-	u = git submodule update --init
+    fbase = rebase -i HEAD~2
+    fixup = commit --fixup HEAD
+    p = push
+    c = commit
+    di = diff
+    dsf = "!f() { [ \"$GIT_PREFIX\" != \"\" ] && cd "$GIT_PREFIX"; git diff --color $@ | diff-so-fancy | less --tabs=4 -RFX; }; f"
+    st = status --short --branch
+    co = checkout
+    amend = commit --amend
+    aa = add --all
+    b = branch -v
+    pom = push origin master
+    pod = push origin dev
+    small = log --pretty=oneline --abbrev-commit
+    l = "log --pretty=format:'%C(yellow)%h %ad%Cred%d %C(bold blue)%s %n%C(blue)Author:%Creset %cn <%ce> %n%C(blue)Committer:%Creset %an <%ae>%n' --decorate --date=relative"
+
+    testl = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+    u = git submodule update --init
+    bm = branch --merged
+    up = !git fetch && git rebase --autostash FETCH_HEAD
+    grog = "log --graph --abbrev-commit --decorate --all --format=format:'%C(bold blue)%h%C(reset) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)'"
+    hide = update-index --assume-unchanged
+    unhide = update-index --no-assume-unchanged
+[push]
+    default = simple
+[core]
+    excludesfile = /Users/jesse/.gitignore
+[merge]
+    tool = nvim -d
+[rebase]
+    autosquash = true

@@ -5,47 +5,53 @@ call plug#begin('~/.local/share/nvim/plugged')
 
   " Any valid git URL is allowed
   "Plug 'https://github.com/junegunn/vim-github-dashboard.git'
+
   Plug 'junegunn/vim-easy-align'
+  Plug 'SirVer/ultisnips'
   Plug 'honza/vim-snippets'
-
-  " Allow commenting
+  Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx'] }
+  Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
+  Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
+  "
+  " " Allow commenting
   Plug 'tomtom/tcomment_vim'
-
-  " vimproc
+  "
+  " " Netrw stuffs
+  Plug 'tpope/vim-vinegar'
+  "
+  " " vimproc
   Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-
-  " Color schemes
+  "
+  " " Color schemes
   Plug 'flazz/vim-colorschemes'
-
-  " Support editorconfig files
+  "
+  " " Support editorconfig files
   Plug 'editorconfig/editorconfig-vim'
-
-  " Scratch
+  "
+  " " Scratch
   Plug 'mtth/scratch.vim'
-
-  " Airline
+  "
+  " " Airline
   Plug 'bling/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
-
+  "
   Plug 'tpope/vim-surround'
   Plug 'vim-syntastic/syntastic'
-
-  " Autocomplete
+  "
+  " " Autocomplete
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   "Plug 'zchee/deoplete-go', { 'do': 'make'}
-
+  "
   " Javascript related plugins
   Plug 'pangloss/vim-javascript'
   Plug 'maxmellon/vim-jsx-pretty'
   Plug 'leafgarland/typescript-vim'
-  "Plug 'carlitux/deoplete-ternjs', { 'do': 'yarn add global tern' }
+  Plug 'carlitux/deoplete-ternjs', { 'do': 'yarn add global tern' }
   Plug 'Quramy/tsuquyomi'
-  "Plug 'Shougo/unite.vim'
-  "Plug 'mhartington/vim-typings'
-
-  Plug 'mattn/emmet-vim'
-
-  " Go related plugins
+  "
+  " Plug 'mattn/emmet-vim'
+  "
+  " " Go related plugins
   Plug 'fatih/vim-go'
   Plug 'nsf/gocode'
 
@@ -171,7 +177,7 @@ autocmd FileType typescript setlocal sw=4 sts=0 ts=4 expandtab
 " Color config
 set termguicolors
 set background=dark
-colorscheme Monokai
+colorscheme Tomorrow-Night-Eighties
 
 " Default to Unix LF line endings
 set ffs=unix
@@ -267,6 +273,13 @@ autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 " Configure Deoplete
 " Start Deoplete at vim startup
 let g:deoplete#enable_at_startup = 1
+if !exists('g:deoplete#omni#input_patterns')
+  let g:deoplete#omni#input_patterns = {}
+endif
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+" Deoplete tab complete
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 " let g:tern_request_timeout = 1
 " let g:tern_show_signature_in_pum = '0'  " This do disable full signature type on autocomplete
 "
