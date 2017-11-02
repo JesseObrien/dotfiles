@@ -5,9 +5,11 @@ call plug#begin('~/.local/share/nvim/plugged')
 
   " Any valid git URL is allowed
   "Plug 'https://github.com/junegunn/vim-github-dashboard.git'
+  Plug 'chriskempson/base16-vim'
+
+  Plug 'ntpeters/vim-better-whitespace'
 
   Plug 'junegunn/vim-easy-align'
-  Plug 'SirVer/ultisnips'
   Plug 'honza/vim-snippets'
   Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx'] }
   Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
@@ -111,10 +113,16 @@ call plug#end()
 
 
 
+
 """"""""""""""""""" CUSTOM CONFIG """""""""""""""""""
+set listchars=tab:▸\ ,eol:¬,trail:·,nbsp:·
+
+highlight ExtraWhitespace ctermbg=21
 
 let g:mapleader = ","
 inoremap jj <esc>
+
+cnoremap W<CR> :w<CR>
 
 " Fix Delete (backspace) on Mac OS X
 set backspace=2
@@ -171,13 +179,13 @@ set tabstop=4
 " Tabbing exceptions
 autocmd FileType mkd setlocal sw=4 sts=0 ts=4 expandtab
 autocmd FileType php setlocal sw=4 sts=0 ts=4 expandtab
-autocmd FileType javascript setlocal sw=4 sts=0 ts=4 expandtab
+autocmd FileType javascript setlocal sw=2 sts=0 ts=2 expandtab
 autocmd FileType typescript setlocal sw=4 sts=0 ts=4 expandtab
 
 " Color config
 set termguicolors
 set background=dark
-colorscheme Tomorrow-Night-Eighties
+colorscheme base16-eighties
 
 " Default to Unix LF line endings
 set ffs=unix
@@ -212,15 +220,17 @@ endfunction
 map <leader>rn :call RenameFile()<cr>
 " Retab files
 map <leader>rt gg=G
-
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme = 'base16_spacemacs'
-let g:netrw_liststyle=3
-
 " Create a new tab using ,tn
 map <leader>tn :tabnew<cr>
-
 map <leader>s :Scratch<cr>
+" save the file with ,w
+map <leader>w :w<cr>
+" Strip whitespace with ,ws
+map <leader>ws :StripWhitespace<cr>
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme = 'base16_eighties'
+let g:netrw_liststyle=3
 
 " Laravel Blade Syntax
 au BufRead,BufNewFile *.blade.php set filetype=html
@@ -228,7 +238,6 @@ au BufRead,BufNewFile *.blade.php set filetype=html
 " Ruby syntax for configs
 au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru} set ft=ruby
 
-" Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
@@ -257,14 +266,15 @@ set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
+"let g:syntastic_enable_signs=1
+"let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_typescript_checkers = ['tsc', 'tslint']
-let g:syntastic_quiet_messages = { "type": "style" }
+"let g:syntastic_typescript_checkers = ['tsc', 'tslint']
+"let g:syntastic_quiet_messages = { "type": "style" }
 let g:syntastic_go_checkers = ['go']
 "let g:tsuquyomi_disable_quickfix = 1
-"let g:syntastic_typescript_checkers = ['tsuquyomi']
+let g:syntastic_typescript_checkers = ['tsuquyomi']
 
 " Enable omnicomplete
 set omnifunc=syntaxcomplete#Complete
