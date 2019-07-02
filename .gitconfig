@@ -1,15 +1,14 @@
 [user]
     name = Jesse O'Brien
-    email = jesse@jesse-obrien.ca
-#  email = jesse@jesse-obrien.ca
-#	useConfigOnly = true
+    email = jesse@jesseobrien.dev
 
 [color]
     ui = auto
 
 [alias]
+    stash = stash -u
     fbase = rebase -i HEAD~2
-    fixup = commit --fixup HEAD
+    fixup = "!f() { git commit --fixup=HEAD; GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash HEAD~3; }; f"
     p = push
     c = commit
     di = diff
