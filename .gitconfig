@@ -1,7 +1,8 @@
 [user]
     name = Jesse O'Brien
     email = jesse@jesseobrien.dev
-
+[color]
+    ui = true
 [alias]
     conflicts = "!git ls-files -u | cut -f 2 | sort -u"
     grep = grep --untracked -h -n -i
