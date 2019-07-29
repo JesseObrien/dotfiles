@@ -2,11 +2,11 @@
     name = Jesse O'Brien
     email = jesse@jesseobrien.dev
 
-[color]
-    ui = auto
-
 [alias]
+    conflicts = "!git ls-files -u | cut -f 2 | sort -u"
+    grep = grep --untracked -h -n -i
     stash = stash -u
+    yeet = stash
     fbase = rebase -i HEAD~2
     fixup = "!f() { git commit --fixup=HEAD; GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash HEAD~3; }; f"
     p = push
@@ -38,3 +38,15 @@
     tool = nvim -d
 [rebase]
     autosquash = true
+[color "diff-highlight"]
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
+[color "diff"]
+    meta = 11
+    frag = magenta bold
+    commit = yellow bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
