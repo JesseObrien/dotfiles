@@ -24,17 +24,19 @@ setopt hist_ignore_all_dups
 setopt hist_verify
 setopt append_history
 
-export HOMEBREW_AUTO_UPDATE=1
-export PATH=$PATH:~/go/bin
-export PATH=$PATH:/usr/bin:/bin:/usr/sbin:/usr/local/sbin:/sbin:/usr/local/bin
-export PATH=$PATH:~/bin
-export EDITOR=nvim
-
 # GOPATH exports
 export GOBASE=$HOME/go
 export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
+
+# PATH exports
+export HOMEBREW_AUTO_UPDATE=1
+export PATH=$PATH:/usr/bin:/bin:/usr/sbin:/usr/local/sbin:/sbin:/usr/local/bin
+export PATH=$PATH:~/bin
+export PATH=$PATH:$HOME/.garden/bin
 export PATH=$PATH:$GOBIN
+
+export EDITOR=nvim
 
 # Aliases
 alias v=nvim
@@ -49,9 +51,12 @@ alias vim=nvim
 alias vi="nvim"
 alias svim="sudo nvim"
 alias gprune="git branch --merged | grep -v "\*" | grep -v master | grep -v dev | xargs -n 1 git branch -d"
-alias weather='curl -s wttr.in/Kitchener | sed -n "1,7p"'
+alias weather='curl -s  http://wttr.in/london%20ontario | sed -n "1,7p"'
+alias uuid="uuidgen| tr '[:upper:]' '[:lower:]'"
 alias grep="rg"
 alias ag="rg"
+alias goco='grep -v -e " 1$" coverage.out'
+
 
 # Go aliases
 alias gb="go build"
